@@ -1,19 +1,15 @@
-const { connect } = require('./db')
-//const { create, read, update } = require('./controllers/users')
-const user = require('./controllers/users')
+const express = require('express')
+const app = express()
 
-connect()
-    .then(async () => {
-        /* const u = {
-            id: '143',
-            name: 'michael',
-            age: 23,
-            isMarried: false
-        } */
-        // const res = await user.create(u)
-        //const res = await user.read()
+const db = require('./db')
+const router = require('./router')
 
-        //const res = await user.update('610ba00c1ff1f726a8d3230e', { age: 28 })
-        const res = await user.update('610ba00c1ff1f726a8d3230e', { 'address.city': 'jerusalem' })
-        console.log(res)
+app.use(express.json())
+
+db.connect()
+    .then(() => {
+        router(app)
+
+        app.listen(3000,
+            () => console.log('server is up'))
     })

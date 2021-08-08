@@ -7,6 +7,7 @@ const
 
 exports.connect = async function connect() {
     try {
+        console.log('connecting ..')
         await mongoose.connect(connectionString, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
