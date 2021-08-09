@@ -11,8 +11,13 @@ document.querySelector('form').onsubmit = event => {
     login(values.email, values.password)
 }
 
+let user
 async function login(email, password) {
     const res = await axios.post('/login', { email, password })
 
-    console.log(res)
+    user = res.data
+    console.log(user)
+
+    document.querySelector('main')
+        .innerHTML = `<h1>Hello ${user.name}</h1>`
 }
