@@ -5,6 +5,7 @@ const db = require('./db')
 const router = require('./router')
 
 app.use(express.json())
+app.use(express.static('public'))
 
 db.connect()
     .then(() => {

@@ -1,5 +1,6 @@
 const User = require('../models/users')
 const bcryptjs = require('bcryptjs')
+const { createToken, verifyToken } = require('../jwt')
 
 async function create(data) {
     return User.create(data)
@@ -7,8 +8,13 @@ async function create(data) {
 exports.create = create
 
 
-async function read(filter) {
-    return User.find(filter)
+async function read(filter, token) {
+    const user = await readOne({ token })
+
+    if (user && verifyToken(user._id, token))
+        return User.find(filter)
+    else
+        throw 'not conected'
 }
 exports.read = read
 
@@ -51,7 +57,13 @@ exports.login = async function login(email, password) {
     if (!bcryptjs.compareSync(password, user.password))
         throw 'Faild to login'
 
+    const token = createToken(user._id)
+    user.token = token
+
     user.lastSeen = Date.now()
 
-    return await update(user._id, user)
+    const updatedUser = await update(user._id, user)
+    updatedUser.token = token
+
+    return updatedUser
 }

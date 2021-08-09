@@ -4,7 +4,8 @@ module.exports = function Router(app) {
 
     app.get('/users', async function (req, res) {
         try {
-            const list = await user.read()
+            const token = req.headers.authorization
+            const list = await user.read({}, token)
             res.send(list)
         } catch (error) {
             res.status(400).send({
